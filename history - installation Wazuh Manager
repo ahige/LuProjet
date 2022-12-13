@@ -1,0 +1,10 @@
+    1  curl -sO https://packages.wazuh.com/4.3/wazuh-install.sh && sudo bash ./wazuh-install.sh -a
+    2  nano configWazuh.txt
+    3  sudo apt install tar
+    4  sudo tar -O -xvf wazuh-install-files.tar wazuh-passwords.txt
+    5  systemctl restart wazuh-manager.service
+    6  sudo nano /etc/netplan/00-installer-config.yaml
+    7  ip a
+    8  sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+    9  sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+   10  sudo sysctl -w net.ipv6.conf.lo.disable_ipv6=1

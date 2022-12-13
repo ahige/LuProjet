@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Formulaire Produit</title>
+</head>
+<body>
+    <h1>Formulaire Produit</h1>
+    <form action="/produits/add" method="POST">{% csrf_token %}
+        Nom : <input name="title" /><br />
+        Image : <input name="image_url" /><br />
+        Prix : <input type="number" name="price" /><br />
+        Quantité : <input type="number" name="qty" /><br />
+        <input type="submit" />
+    </form>
+</body>
+</html>

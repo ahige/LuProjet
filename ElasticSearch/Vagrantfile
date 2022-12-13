@@ -1,0 +1,67 @@
+Vagrant.configure(2) do |config|
+
+
+  
+	# Set some variables
+  etcHosts=""
+  common = <<-SHELL
+  sudo apt update -qq 2>&1 >/dev/null
+  sudo apt install -y -qq git vim jq tree net-tools telnet 2>&1 >/dev/null
+  sudo route add default gw 192.168.15.254 2>&1 >/dev/null
+  sudo curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+  sudo python3 get-pip.py --user
+  sudo echo "autocmd filetype yaml setlocal ai ts=2 sw=2 et" > /home/vagrant/.vimrc
+  sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/g' /etc/ssh/sshd_config
+  sudo systemctl restart sshd
+  SHELL
+
+  elk = <<-SHELL
+  sudo apt install default-jdk -y
+  sudo apt-get install apt-transport-https
+  sudo curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+  echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+  sudo apt-get update -y
+  sudo apt-get install -y elasticsearch kibana logstash
+  sudo systemctl enable elasticsearch
+  sudo systemctl enable kibana
+  
+  SHELL
+
+
+	# set vagrant image
+	config.vm.box = "ubuntu/focal64"
+	config.vm.box_url = "ubuntu/focal64"
+
+	# set servers list and their parameters
+	NODES = [
+  	{ :hostname => "nodeELK", :ip => "192.168.15.12", :cpus => 2, :mem => 4096 },
+    # { :hostname => "vmWaz", :ip => "192.168.15.11", :cpus => 2, :mem => 4096 },
+    # { :hostname => "vmK8s", :ip => "192.168.15.10", :cpus => 2, :mem => 4096 },
+	]
+
+	# define /etc/hosts for all servers
+  NODES.each do |node|
+   	etcHosts += "echo '" + node[:ip] + "   " + node[:hostname] + "' >> /etc/hosts" + "\n"
+  end #end NODES
+
+	# run installation
+  NODES.each do |node|
+    config.vm.define node[:hostname] do |cfg|
+			cfg.vm.hostname = node[:hostname]
+      cfg.vm.network "private_network", ip: node[:ip],
+        virtualbox__intnet: true
+      cfg.vm.provider "virtualbox" do |v|
+				v.customize [ "modifyvm", :id, "--cpus", node[:cpus] ]
+        v.customize [ "modifyvm", :id, "--memory", node[:mem] ]
+        v.customize ["modifyvm", :id, "--name", node[:hostname] ]
+      end #end provider
+			
+			#for all
+      cfg.vm.provision :shell, :inline => etcHosts
+			cfg.vm.provision :shell, :inline => common
+      if node[:hostname] === "nodeELK"
+        cfg.vm.provision :shell, :inline => elk
+      end
+    end # end config
+  end # end nodes
+end

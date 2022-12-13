@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    {% if produits|length > 0 %}
+    <table border="1">
+        <thead>
+            <td>Nom Produit</td>
+            <td>Image</td>
+            <td>Prix</td>
+            <td>Quantité</td>
+        </thead>    
+        <tbody>
+            {% for produit in produits %}
+            <tr>
+                <td>{{ produit.title }}</td>
+                <td>{{ produit.image_url }}</td>
+                <td>{{ produit.price }}</td>
+                <td>{{ produit.qty }}</td>
+            </tr>            
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div>Pas de produits</div>
+    {% endif %}
+</body>
+</html>

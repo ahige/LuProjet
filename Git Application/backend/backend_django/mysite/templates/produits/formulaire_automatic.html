@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Formulaire Produit</title>
+    {# Load the tag library #}
+    {% load bootstrap3 %}
+
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+<body>
+        
+    <h1>Formulaire Produit</h1>
+    {% bootstrap_messages %}
+    <form action="/produits/add" method="POST">{% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" />
+    </form>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Produit modification formulaire</title>
+    <!--    
+        <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+    -->
+    </head>
+
+    <body>
+        <h1>Formulaire Modifier produit : <span id="display_nom_produit"></span></h1>
+        <br />
+        <a href="/">Home</a>
+        <br />
+        <div id="message"></div>
+        <form>
+            Nom produit : <input id="nom_produit" type="text" name="nom_produit" value="" readonly  /><br />
+            Image produit à modifier : <input id="image_produit" type="file" name="image_produit" accept="*.jpg,*.jpeg,*.png,*.bmp,*.gif" /><br />
+            Quantité : <input id="qty_produit" type="number" name="qty_produit" value="" /><br />
+            Prix Unitaire : <input id="prix_produit" type="number" name="prix_produit" value="" /><br />
+            <input id="submitModifierProduit" type="button" value="Modifier produit" />
+        </form>
+        <script src="/js/vendors/jquery.min.js" type="text/javascript" ></script>
+        <script src="/js/constantes.js" type="text/javascript" ></script>
+        <script src="/js/formulaire_modifier_produit.js" type="text/javascript" ></script>
+    </body>
+</html>

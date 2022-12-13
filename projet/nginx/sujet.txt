@@ -1,0 +1,19 @@
+Installation de docker et docker-compose
+sudo apt update && sudo apt install -y docker docker-compose
+
+Installation de notre CA dans le le catalogue de la machine hote.
+mettre le certificat racine (CA) dans le repertoire /usr/local/share/ca-certificates puis executer la commande
+sudo /sbin/update-ca-certificates
+et la notre certificat est importe dans le fichier /etc/ca-certificates.pem qui contient tous les certificat racine  (CA) de confiance.
+
+
+On rempli bien tous les fichier et le docker-compose
+et c'est parti mon kiki...
+sudo docker-compose up -d 
+
+Cheatsheet:
+sudo docker logs -f moncontainer >> Voir les logs du container
+sudo docker ps >> Voir les containers et leur etat (up ou restarting)
+sudo docker stop container >> Stop un container
+sudo docker stop `sudo docker ps -qa` >> Stop tous les container d'un coup
+

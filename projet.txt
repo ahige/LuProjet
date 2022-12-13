@@ -1,0 +1,32 @@
+rezgui — Aujourd’hui à 09:50
+Projet
+Description du besoin
+Une entreprise vous demande de mettre en place une architecture permettant déployer une application (de vote)
+Python avec sa base de donnée MySQL et une base de données Redis pour le cache.
+Votre architecture devra avoir les caractéristiques suivantes :
+• résilience : la défaillance d’un élément ne doit pas impacter le service offert aux utilisateurs. Cela
+implique d’identifier et d’éviter les SPOF (Single Point Of Failure), mais aussi de créer des backups
+des données de l’application.
+• passage à l’échelle : bien qu’initialement le trafic attendu soit faible, votre architecture doit
+permettre une augmentation rapide des capacités sans interruption de service. Cette augmentation
+pourra être faite manuellement ou automatiquement.
+• connaissance : les (nombreux) membres de l’entreprise devront pouvoir monitorer l’état de santé
+des éléments de votre architecture (OS, logiciels). Des alarmes en cas de disfonctionnement seraient
+un plus.
+
+Mise en oeuvre
+Vous avez carte blanche pour la composition de votre architecture. Vous pourrez ainsi choisir :
+1. Le type d’infrastructure physique
+• on premise : des machines locales (VM)
+• cloud : des machines virtuelles (AWS)
+• hybrid : un peu des deux
+2. Le type de déploiement de votre pile logicielle
+• installation directe sur les systèmes hôtes (avec ou sans gestionnaire de configuration)
+• containerisation des applications, avec un orchestrateur comme docker swarm ou utilisation de machines virtuelles
+3. La composition de votre pile logicielle
+• quels outils pour assurer les services “techniques” (monitoring, résilience, etc)
+Les tâches à faire :
+• Elaboration d’une architecture avec http://draw.io (ou équivalent)
+• Validation de l’architecture par le formateur
+• Implémentation de l’architecture
+• Procédures d’installation

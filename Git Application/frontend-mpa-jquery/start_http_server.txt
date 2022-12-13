@@ -1,0 +1,4 @@
+Lancer la commande dans le dossier frontend-mpa-jquery
+
+cd frontend-mpa-jquery/
+python -m http.server 3000

@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  monsupernginx:
+    image: nginx:alpine # Image utilisee
+    container_name: monsupernginx # Un nom super hype
+    volumes: 
+     - /etc/localtime:/etc/localtime:ro # On partage l'heure du systemt
+     - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro # On partage nos certificat racine 
+     - ./sujet/nginx.conf:/etc/nginx/conf.d/default.conf:ro  # alpine linux va chercher par defaut le fichier nginx a cet endroit
+     - ./sujet/monsupernginx.asr.lol.crt:/cert/monsupernginx.asr.lol.crt:ro # Le certificat du serveur web
+     - ./sujet/monsupernginx.asr.lol.key:/cert/monsupernginx.asr.lol.key:ro # la cle privee (droit en 400)
+    ports:
+     - 443:443 # on partage le reseau de la machine hote avec le container
+  monsupernginx2:
+    image: nginx:alpine # Image utilisee
+    container_name: monsupernginx2 # Un nom super hype
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+    - 8080:8080
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    depends_on:
+    - redis
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+    - 6379:6379

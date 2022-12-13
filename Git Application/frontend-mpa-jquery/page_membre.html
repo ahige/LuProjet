@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>Page membre</title>
+    <!--    <link rel="stylesheet" type="text/css" href="/static/css/style.css" /> -->
+    </head>
+
+    <body>
+        <span><h1>Bienvenue <span id="display_login"></span></h1><button id="logout">Logout</button></span>
+        <br />        
+        <div id="message"></div>
+        <br />
+        Ajouter un produit
+        <a href="/formulaire_ajout_produit.html"><button>Ajouter produit</button></a>
+        <br />
+        Voici la liste des produits :
+        <br />
+        <table border="1">
+            <thead>
+            <tr>
+                <td>Nom Produit</td>
+                <td>Image Produit</td>
+                <td>Quantité</td>
+                <td>Prix Unitaire (€)</td>
+                <td>Prix Total (€)</td>                
+                <td>Modifier Produit</td>                
+                <td>Supprimer Produit</td>                
+            </tr>
+            </thead>
+            <tbody id="tableProduits">
+                        
+            </tbody>            
+        </table>
+        <script src="/js/vendors/jquery.min.js" type="text/javascript" ></script>
+        <script src="/js/constantes.js" type="text/javascript" ></script>
+        <script src="/js/page_membre.js" type="text/javascript" ></script>
+    </body>
+</html>
