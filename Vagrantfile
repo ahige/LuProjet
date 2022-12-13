@@ -41,6 +41,11 @@ Vagrant.configure(2) do |config|
 #  sudo ln -s /var/ossec/logs/alerts/alerts.json /wazuh_logs/
   SHELL
 
+  commonvmbkp = <<-SHELL
+  apt update
+  apt install rsync
+  SHELL
+
 	# set servers list and their parameters
 	NODES = [
     { :hostname => "vmWaz", :ip => "192.168.10.11", :cpus => 2, :mem => 4096, :box => "ubuntu/focal64", :box_url => "ubuntu/focal64" },
@@ -64,10 +69,8 @@ Vagrant.configure(2) do |config|
       cfg.vm.provider "virtualbox" do |v|
 				v.customize [ "modifyvm", :id, "--cpus", node[:cpus] ]
         v.customize [ "modifyvm", :id, "--memory", node[:mem] ]
-        v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-        v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
         v.customize ["modifyvm", :id, "--name", node[:hostname] ]
-      end #end provider
+      end #end  
 			
 			#for all
       cfg.vm.provision :shell, :inline => etcHosts
@@ -82,6 +85,7 @@ Vagrant.configure(2) do |config|
         cfg.vm.synced_folder "./passwdWaz", "/passwdWaz"
       elsif node[:hostname] === "vmBkp"
         cfg.vm.synced_folder "./etc", "/test"
+        cfg.vm.provision :shell, :inline => commonvmbkp
       end
     end # end config
   end # end nodes
