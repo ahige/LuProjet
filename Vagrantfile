@@ -11,7 +11,9 @@ Vagrant.configure(2) do |config|
   sudo curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
   sudo python3 get-pip.py --user
   sudo echo "autocmd filetype yaml setlocal ai ts=2 sw=2 et" > /home/vagrant/.vimrc
-  sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/g' /etc/ssh/sshd_config
+  sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/g' /etc/ssh/sshd_config 2>&1 >/dev/null
+  sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config 2>&1 >/dev/null
+  sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config 2>&1 >/dev/null
   sudo systemctl restart sshd
   sudo apt-get install -y docker.io docker-compose
   # désactivation de l'IPv6 :
@@ -20,6 +22,9 @@ Vagrant.configure(2) do |config|
   # echo net.ipv6.conf.lo.disable_ipv6=1 >> /etc/sysctl.conf
   sudo sysctl -p
   sudo timedatectl set-timezone Europe/Paris
+  sudo -i
+  sudo echo "vagrant" | passwd
+  su vagrant
   SHELL
 
   commonwazagent = <<-SHELL
@@ -49,7 +54,10 @@ Vagrant.configure(2) do |config|
   sudo systemctl restart wazuh-agent
   sudo apt update
   sudo apt install rsync
-  
+  sudo mkdir /bkpWaz /bkpApp
+  sudo rsync -avz -e ssh root@192.168.10.11:/var/ossec/ /bkpWaz
+  sudo rsync -avz -e ssh root@192.168.10.12:/var/ossec/ /bkpApp
+
   SHELL
 
 	# set servers list and their parameters
@@ -91,7 +99,7 @@ Vagrant.configure(2) do |config|
         cfg.vm.provision :shell, :inline => commonwazmaster
         cfg.vm.synced_folder "./passwdWaz", "/passwdWaz"
       elsif node[:hostname] === "vmBkp"
-        cfg.vm.provision :shell, :inline => commondeb
+        cfg.vm.provision :shell, :inline => common
         cfg.vm.synced_folder "./etc", "/test"
         cfg.vm.provision :shell, :inline => commonvmbkp
       end
