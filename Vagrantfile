@@ -6,7 +6,7 @@ Vagrant.configure(2) do |config|
   etcHosts=""
   common = <<-SHELL
   sudo apt update -qq 2>&1 >/dev/null
-  sudo apt install -y -qq git vim jq tree net-tools telnet 2>&1 >/dev/null
+  sudo apt install -y -qq git vim jq curl tree net-tools telnet 2>&1 >/dev/null
   sudo route add default gw 192.168.10.254 2>&1 >/dev/null
   sudo curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
   sudo python3 get-pip.py --user
@@ -43,7 +43,6 @@ Vagrant.configure(2) do |config|
   sudo tar -xvf wazuh-install-files.tar wazuh-install-files/wazuh-passwords.txt
   systemctl restart wazuh-manager.service
   sudo cp wazuh-install-files/wazuh-passwords.txt /passwdWaz
-#  sudo ln -s /var/ossec/logs/alerts/alerts.json /wazuh_logs/
   SHELL
 
   commonvmbkp = <<-SHELL
@@ -57,7 +56,6 @@ Vagrant.configure(2) do |config|
   sudo mkdir /bkpWaz /bkpApp
   sudo rsync -avz -e ssh root@192.168.10.11:/var/ossec/ /bkpWaz
   sudo rsync -avz -e ssh root@192.168.10.12:/var/ossec/ /bkpApp
-
   SHELL
 
 	# set servers list and their parameters
