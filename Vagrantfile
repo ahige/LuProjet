@@ -22,6 +22,19 @@ Vagrant.configure(2) do |config|
   sudo timedatectl set-timezone Europe/Paris
   SHELL
 
+  commondeb = <<-SHELL
+  apt update -qq 2>&1 >/dev/null
+  apt install -y -qq git vim jq tree net-tools telnet 2>&1 >/dev/null
+  route add default gw 192.168.10.254 2>&1 >/dev/null
+  curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+  python3 get-pip.py --user
+  echo "autocmd filetype yaml setlocal ai ts=2 sw=2 et" > /home/vagrant/.vimrc
+  sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/g' /etc/ssh/sshd_config
+  systemctl restart sshd
+  apt-get install -y docker.io docker-compose
+  timedatectl set-timezone Europe/Paris
+  SHELL
+
   commonwazagent = <<-SHELL
   sudo curl -so wazuh-agent-4.3.10.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.3.10-1_amd64.deb && sudo WAZUH_MANAGER='192.168.10.101' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent-4.3.10.deb
   sudo systemctl daemon-reload
@@ -42,6 +55,11 @@ Vagrant.configure(2) do |config|
   SHELL
 
   commonvmbkp = <<-SHELL
+  curl -so wazuh-agent-4.3.10.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.3.10-1_amd64.deb && sudo WAZUH_MANAGER='192.168.10.101' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent-4.3.10.deb
+  systemctl daemon-reload
+  systemctl enable wazuh-agent
+  cp /test/ossec.conf /var/ossec/etc/ossec.conf
+  systemctl restart wazuh-agent
   apt update
   apt install rsync
   SHELL
@@ -74,16 +92,18 @@ Vagrant.configure(2) do |config|
 			
 			#for all
       cfg.vm.provision :shell, :inline => etcHosts
-			cfg.vm.provision :shell, :inline => common
       if node[:hostname] === "vmApp"
+        cfg.vm.provision :shell, :inline => common
         cfg.vm.synced_folder "./etc", "/test"
         cfg.vm.synced_folder "./projet", "/projet"
         cfg.vm.provision :shell, :inline => commonwazagent
       elsif node[:hostname] === "vmWaz"
+        cfg.vm.provision :shell, :inline => common
         cfg.vm.synced_folder "./etc", "/test"
         cfg.vm.provision :shell, :inline => commonwazmaster
         cfg.vm.synced_folder "./passwdWaz", "/passwdWaz"
       elsif node[:hostname] === "vmBkp"
+        cfg.vm.provision :shell, :inline => commondeb
         cfg.vm.synced_folder "./etc", "/test"
         cfg.vm.provision :shell, :inline => commonvmbkp
       end
