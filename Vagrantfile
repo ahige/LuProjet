@@ -1,6 +1,4 @@
 Vagrant.configure(2) do |config|
-
-
   
 	# Set some variables
   etcHosts=""
@@ -62,7 +60,7 @@ Vagrant.configure(2) do |config|
 	NODES = [
     { :hostname => "vmBkp", :ip => "192.168.10.13", :cpus => 1, :mem => 512, :box => "debian/bullseye64", :box_url => "debian/bullseye64" },
     { :hostname => "vmWaz", :ip => "192.168.10.11", :cpus => 2, :mem => 4096, :box => "ubuntu/focal64", :box_url => "ubuntu/focal64" },
-  	{ :hostname => "vmApp", :ip => "192.168.10.12", :cpus => 1, :mem => 2048, :box => "ubuntu/focal64", :box_url => "ubuntu/focal64"  },
+  	{ :hostname => "vmApp", :ip => "192.168.10.12", :cpus => 1, :mem => 512, :box => "debian/bullseye64", :box_url => "debian/bullseye64"  },
 	]
 
 	# define /etc/hosts for all servers
