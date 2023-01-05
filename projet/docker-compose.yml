@@ -14,22 +14,23 @@ services:
      - 443:443 # on partage le reseau de la machine hote avec le container
     networks:
       - identinet
+    restart: always
   identidock:
     container_name: appv1
     build: .
     networks:
       - identinet
-
+    restart: always
   dnmonster:
     image: amouat/dnmonster:1.0
     networks:
       - identinet
-
+    restart: always
   redis:
     image: redis
     networks:
       - identinet
-
+    restart: always
 networks:
   identinet:
     driver: bridge

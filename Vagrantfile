@@ -5,7 +5,7 @@ Vagrant.configure(2) do |config|
   common = <<-SHELL
   sudo apt update -qq 2>&1 >/dev/null
   sudo apt install -y -qq git vim jq curl tree net-tools telnet 2>&1 >/dev/null
-  sudo route add default gw 192.168.10.254 2>&1 >/dev/null
+  sudo route add default gw 192.168.15.254 2>&1 >/dev/null
   sudo curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
   sudo python3 get-pip.py --user
   sudo echo "autocmd filetype yaml setlocal ai ts=2 sw=2 et" > /home/vagrant/.vimrc
@@ -26,7 +26,7 @@ Vagrant.configure(2) do |config|
   SHELL
 
   commonwazagent = <<-SHELL
-  sudo curl -so wazuh-agent-4.3.10.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.3.10-1_amd64.deb && sudo WAZUH_MANAGER='192.168.10.101' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent-4.3.10.deb
+  sudo curl -so wazuh-agent-4.3.10.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.3.10-1_amd64.deb && sudo WAZUH_MANAGER='192.168.15.101' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent-4.3.10.deb
   sudo systemctl daemon-reload
   sudo systemctl enable wazuh-agent
   sudo cp /test/ossec.conf /var/ossec/etc/ossec.conf
@@ -52,15 +52,15 @@ Vagrant.configure(2) do |config|
   sudo apt update
   sudo apt install rsync
   sudo mkdir /bkpWaz /bkpApp
-  sudo rsync -avz -e ssh root@192.168.10.11:/var/ossec/ /bkpWaz
-  sudo rsync -avz -e ssh root@192.168.10.12:/var/ossec/ /bkpApp
+  sudo rsync -avz -e ssh root@192.168.15.11:/var/ossec/ /bkpWaz
+  sudo rsync -avz -e ssh root@192.168.15.12:/var/ossec/ /bkpApp
   SHELL
 
 	# set servers list and their parameters
 	NODES = [
-    { :hostname => "vmBkp", :ip => "192.168.10.13", :cpus => 1, :mem => 512, :box => "debian/bullseye64", :box_url => "debian/bullseye64" },
-    { :hostname => "vmWaz", :ip => "192.168.10.11", :cpus => 2, :mem => 4096, :box => "ubuntu/focal64", :box_url => "ubuntu/focal64" },
-  	{ :hostname => "vmApp", :ip => "192.168.10.12", :cpus => 1, :mem => 512, :box => "debian/bullseye64", :box_url => "debian/bullseye64"  },
+    { :hostname => "vmWaz", :ip => "192.168.15.11", :cpus => 2, :mem => 4096, :box => "ubuntu/focal64", :box_url => "ubuntu/focal64" },
+  	{ :hostname => "vmApp", :ip => "192.168.15.12", :cpus => 1, :mem => 512, :box => "debian/bullseye64", :box_url => "debian/bullseye64"  },
+    { :hostname => "vmBkp", :ip => "192.168.15.13", :cpus => 1, :mem => 512, :box => "debian/bullseye64", :box_url => "debian/bullseye64" },
 	]
 
 	# define /etc/hosts for all servers
