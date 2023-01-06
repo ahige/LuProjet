@@ -13,15 +13,13 @@ Vagrant.configure(2) do |config|
   sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config 2>&1 >/dev/null
   sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config 2>&1 >/dev/null
   sudo systemctl restart sshd
-  sudo apt-get install -y docker.io docker-compose
   sudo sysctl -p
   sudo timedatectl set-timezone Europe/Paris
-  sudo -i
-  sudo echo "vagrant" | passwd
-  su vagrant
   SHELL
 
   commonwazagent = <<-SHELL
+  sudo apt-get install -y docker.io docker-compose
+  sudo systemctl restart docker
   sudo curl -so wazuh-agent-4.3.10.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.3.10-1_amd64.deb && sudo WAZUH_MANAGER='192.168.10.101' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent-4.3.10.deb
   sudo systemctl daemon-reload
   sudo systemctl enable wazuh-agent
@@ -80,18 +78,16 @@ Vagrant.configure(2) do |config|
 			
 			#for all
       cfg.vm.provision :shell, :inline => etcHosts
+      cfg.vm.provision :shell, :inline => common
       if node[:hostname] === "vmApp"
-        cfg.vm.provision :shell, :inline => common
         cfg.vm.synced_folder "./etc", "/test"
         cfg.vm.synced_folder "./projet", "/projet"
         cfg.vm.provision :shell, :inline => commonwazagent
       elsif node[:hostname] === "vmWaz"
-        cfg.vm.provision :shell, :inline => common
         cfg.vm.synced_folder "./etc", "/test"
         cfg.vm.provision :shell, :inline => commonwazmaster
         cfg.vm.synced_folder "./passwdWaz", "/passwdWaz"
       elsif node[:hostname] === "vmBkp"
-        cfg.vm.provision :shell, :inline => common
         cfg.vm.synced_folder "./etc", "/test"
         cfg.vm.provision :shell, :inline => commonvmbkp
       end
